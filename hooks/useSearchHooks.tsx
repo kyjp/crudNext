@@ -4,15 +4,13 @@ import { useUsersDataStore } from "@/features/useUsersDataStore"
 import { usePageStore } from "@/features/usePageStore"
 
 export type UserDataType = {
-    address: string
-    company: string
-    email: string
-    gender: string
-    name: string
-    phone: string
-    tags: string[]
     id: string
+    name: string
+    created_at: string
+    updated_at: string
 }
+
+export type SortType = 'new' | 'old' | 'name'
 
 export const useSearchHook = () => {
     const usersData = useUsersDataStore(store => store.usersData)
@@ -71,6 +69,29 @@ export const useSearchHook = () => {
         setUsersData(tempData)
         return tempData
     }
+    
+    const quickSort = (arr: UserDataType[], type: SortType): UserDataType[] => {
+        if(arr.length <= 1) return arr
+        if(type === 'new') {
+            const pivot = arr[arr.length - 1]
+            const left = arr.filter(e => new Date(e.created_at) < new Date(pivot.created_at))
+            const right = arr.filter(e => new Date(pivot.created_at) < new Date(e.created_at))
+            return [...quickSort(left, 'new'), pivot, ...quickSort(right, 'new')]
+        }
+        if(type === 'old') {
+            const pivot = arr[arr.length - 1]
+            const left = arr.filter(e => new Date(pivot.created_at) < new Date(e.created_at))
+            const right = arr.filter(e => new Date(e.created_at) < new Date(pivot.created_at))
+            return [...quickSort(left, 'old'), pivot, ...quickSort(right, 'old')]
+        }
+        if(type === 'name') {
+            const pivot = arr[arr.length - 1]
+            const left = arr.filter(e => pivot.name < e.name)
+            const right = arr.filter(e => e.name < pivot.name)
+            return [...quickSort(left, 'name'), pivot, ...quickSort(right, 'name')]
+        }
+        return arr
+    }
 
     return {
         searchQuery,
@@ -79,6 +100,7 @@ export const useSearchHook = () => {
         usersData,
         currentPage,
         handleOnClick,
-        LIMIT
+        LIMIT,
+        quickSort
     }
 }
