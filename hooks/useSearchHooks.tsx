@@ -69,26 +69,39 @@ export const useSearchHook = () => {
         setUsersData(tempData)
         return tempData
     }
+
+    const handleOnSelect = async (event: ChangeEvent<HTMLSelectElement>) => {
+        event.preventDefault()
+        setCurrentPage(1)
+        const tempData = quickSort(data, event.currentTarget.value as SortType)
+        console.log(tempData)
+        if(searchQuery === null || searchQuery === undefined || searchQuery === "") {
+            setUsersData(tempData)
+            return tempData
+        }
+        const tempFilterData = await data.filter((item: UserDataType) => {
+            return ~item.name.indexOf(searchQuery)
+        })
+        setUsersData(tempData)
+        return tempFilterData
+    }
     
     const quickSort = (arr: UserDataType[], type: SortType): UserDataType[] => {
         if(arr.length <= 1) return arr
-        if(type === 'new') {
-            const pivot = arr[arr.length - 1]
-            const left = arr.filter(e => new Date(e.created_at) < new Date(pivot.created_at))
-            const right = arr.filter(e => new Date(pivot.created_at) < new Date(e.created_at))
-            return [...quickSort(left, 'new'), pivot, ...quickSort(right, 'new')]
-        }
         if(type === 'old') {
             const pivot = arr[arr.length - 1]
-            const left = arr.filter(e => new Date(pivot.created_at) < new Date(e.created_at))
-            const right = arr.filter(e => new Date(e.created_at) < new Date(pivot.created_at))
+            const left = arr.filter(e => new Date(e.created_at.replace(" ", "")) < new Date(pivot.created_at.replace(" ", "")))
+            const right = arr.filter(e => new Date(pivot.created_at.replace(" ", "")) < new Date(e.created_at.replace(" ", "")))
+            return [...quickSort(left, 'new'), pivot, ...quickSort(right, 'new')]
+        }
+        if(type === 'new') {
+            const pivot = arr[arr.length - 1]
+            const left = arr.filter(e => new Date(pivot.created_at.replace(" ", "")) < new Date(e.created_at.replace(" ", "")))
+            const right = arr.filter(e => new Date(e.created_at.replace(" ", "")) < new Date(pivot.created_at.replace(" ", "")))
             return [...quickSort(left, 'old'), pivot, ...quickSort(right, 'old')]
         }
         if(type === 'name') {
-            const pivot = arr[arr.length - 1]
-            const left = arr.filter(e => pivot.name < e.name)
-            const right = arr.filter(e => e.name < pivot.name)
-            return [...quickSort(left, 'name'), pivot, ...quickSort(right, 'name')]
+            return [...arr.sort((a, b) => a.name.localeCompare(b.name, "ja"))]
         }
         return arr
     }
@@ -101,6 +114,7 @@ export const useSearchHook = () => {
         currentPage,
         handleOnClick,
         LIMIT,
-        quickSort
+        quickSort,
+        handleOnSelect
     }
 }

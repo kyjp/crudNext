@@ -10,7 +10,7 @@ type SearchFormSelectType = ComponentPropsWithoutRef<'select'>
 const SearchForm: FC<SearchFormType> & {
     Select: FC<SearchFormSelectType>
 } = () => {
-    const {searchQuery, handleOnChange, handleOnSubmit} = useSearchHook()
+    const {searchQuery, handleOnChange, handleOnSubmit, handleOnSelect} = useSearchHook()
     return (
         <form>
             <div className="flex gap-3">
@@ -29,16 +29,21 @@ const SearchForm: FC<SearchFormType> & {
                     </Button>
                 </div>
                 <div>
-                    <SearchForm.Select></SearchForm.Select>
+                    <SearchForm.Select
+                        onChange={handleOnSelect}
+                    />
                 </div>
             </div>
         </form>
     )
 }
 
-SearchForm.Select = (() => {
+SearchForm.Select = (({
+    onChange
+}) => {
     return (
         <select
+            onChange={onChange}
             defaultValue="initial"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
         >
