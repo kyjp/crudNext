@@ -7,9 +7,9 @@ export default defineConfig({
     test: {
         globals: true,
         environment: "jsdom",
-        include: ["src/**/*.spec.{js,ts,jsx,tsx}"],
+        include: ["./**/*.spec.{js,ts,jsx,tsx}"],
         alias: {
-            "@": path.resolve(__dirname, "./src"),
+            "@": path.resolve(__dirname, "./"),
         },
         coverage: {
             reporter: ['text', 'json-summary', 'json']

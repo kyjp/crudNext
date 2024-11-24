@@ -1,0 +1,10 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Test group of InputText component > Snapshot Test > renders InputText component 1`] = `
+<DocumentFragment>
+  <input
+    class="text-base px-4 py-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5undefined"
+    type="text"
+  />
+</DocumentFragment>
+`;
