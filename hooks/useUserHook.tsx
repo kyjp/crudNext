@@ -1,5 +1,5 @@
 import { ChangeEvent, MouseEvent, useState } from "react"
-import { useUsersHook } from "./useUsersHooks"
+import { useUsersHook } from "./useUsersHook"
 
 export const useUserHook = () => {
     const [name, setName] = useState("")

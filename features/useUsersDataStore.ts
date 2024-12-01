@@ -1,4 +1,4 @@
-import { UserDataType } from '@/hooks/useSearchHooks'
+import { UserDataType } from '@/hooks/useSearchHook'
 import {create} from 'zustand'
 
 export const useUsersDataStore = create<{

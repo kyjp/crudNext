@@ -1,7 +1,7 @@
 'use client'
 import Button from '@/components/ui-elements/button/Button'
 import InputText from '@/components/ui-elements/input/InputText'
-import { useSearchHook } from '@/hooks/useSearchHooks'
+import { useSearchHook } from '@/hooks/useSearchHook'
 import React, { ComponentPropsWithoutRef, FC } from 'react'
 
 type SearchFormType = ComponentPropsWithoutRef<'form'>

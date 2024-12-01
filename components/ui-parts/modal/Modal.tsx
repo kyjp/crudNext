@@ -1,6 +1,6 @@
 'use client'
 import Button from '@/components/ui-elements/button/Button'
-import { useModalHook } from '@/hooks/useModalHooks'
+import { useModalHook } from '@/hooks/useModalHook'
 import React, { ComponentPropsWithoutRef, FC } from 'react'
 
 type ModalType = ComponentPropsWithoutRef<'div'>

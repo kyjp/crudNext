@@ -1,7 +1,7 @@
 'use client'
 import Pagination from '@/components/ui-elements/pagination/Pagination'
-import { UserDataType, useSearchHook } from '@/hooks/useSearchHooks'
-import { useUsersHook } from '@/hooks/useUsersHooks'
+import { UserDataType, useSearchHook } from '@/hooks/useSearchHook'
+import { useUsersHook } from '@/hooks/useUsersHook'
 import React, { ComponentPropsWithoutRef, FC } from 'react'
 
 type UsersListType = ComponentPropsWithoutRef<'ul'>

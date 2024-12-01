@@ -1,5 +1,5 @@
 import { ChangeEvent, MouseEvent, useEffect, useState } from "react"
-import { useUsersHook } from "./useUsersHooks"
+import { useUsersHook } from "./useUsersHook"
 import { useUsersDataStore } from "@/features/useUsersDataStore"
 import { usePageStore } from "@/features/usePageStore"
 

@@ -1,4 +1,4 @@
-import { UserDataType } from "@/hooks/useSearchHooks"
+import { UserDataType } from "@/hooks/useSearchHook"
 import { useUsersDataStore } from "./useUsersDataStore"
 import { act } from "react"
 
