@@ -1,33 +1,55 @@
 
-import { vi } from 'vitest'
+import { Mock, vi } from 'vitest'
 import { useSearchHook } from './useSearchHook'
-import { create } from 'zustand'
+import { useUsersDataStore } from '@/features/useUsersDataStore'
+import { useUsersHook } from './useUsersHook'
 import { MouseEvent } from 'react'
+import { usePageStore } from '@/features/usePageStore'
+import { renderHook } from '@testing-library/react'
 
-const mockUsePageStore = create(() => ({
-    currentPage: 0,
-    setCurrentPage: vi.fn()
-}))
+vi.mock('../features/usePageStore')
+vi.mock('../features/useUsersDataStore')
+vi.mock('./useUsersHook')
 
-vi.mock('../features/usePageStore', () => ({
-    usePageStore: mockUsePageStore
-}))
+const mockUsePageStore = usePageStore as unknown as Mock
+const mockUseUsersDataStore = useUsersDataStore as unknown as Mock
+const mockUseUsersHook = useUsersHook as unknown as Mock
 
 describe('test useSearchHookStore group', () => {
     const setCurrentPageMock = vi.fn()
-    
+    beforeAll(() => {
+        // useUsersDataStore のモックを設定
+        mockUseUsersDataStore.mockImplementationOnce(() => [
+            {
+                id: '1',
+                name: 'John Doe',
+                created_at: '2019-02-02T00:00:00.000Z',
+                updated_at: '2019-02-02T00:00:00.000Z',
+            }
+        ]).mockImplementationOnce(() => vi.fn()) // 次回の呼び出し時には関数としてモックする
+        
+        // mockUsePageStore のモック
+        mockUsePageStore.mockImplementationOnce(() => 0).mockImplementationOnce(() => setCurrentPageMock)
+
+        // mockUseUsersHook のモック
+        mockUseUsersHook.mockImplementation(() => ({
+            isLoading: false,
+            error: null,
+            data: []
+        }))
+    })
+
     beforeEach(() => {
-        // モックのsetCurrentPageを設定
-        mockUsePageStore.setState({
-          currentPage: 0,
-          setCurrentPage: setCurrentPageMock
-        })
+        mockUsePageStore.mockClear()
+        mockUseUsersDataStore.mockClear()
+        mockUseUsersHook.mockClear()
     })
 
     test('should call setCurrentPage when page is changed', () => {
-        const { handleOnClick } = useSearchHook()
+        const { result } = renderHook(() => useSearchHook())
+
         // クリックイベントを模倣
-        handleOnClick({ currentTarget: { innerText: 'Next' }, preventDefault: vi.fn() } as unknown as MouseEvent<HTMLButtonElement>)
+        result.current.handleOnClick({ currentTarget: { innerText: 'Next' }, preventDefault: vi.fn() } as unknown as MouseEvent<HTMLButtonElement>)
         expect(setCurrentPageMock).toHaveBeenCalledWith(1)
     })
 })
