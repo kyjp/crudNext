@@ -3,9 +3,9 @@ import { Mock, vi } from 'vitest'
 import { useSearchHook } from './useSearchHook'
 import { useUsersDataStore } from '@/features/useUsersDataStore'
 import { useUsersHook } from './useUsersHook'
-import { MouseEvent } from 'react'
+import { ChangeEvent, MouseEvent, useState } from 'react'
 import { usePageStore } from '@/features/usePageStore'
-import { renderHook } from '@testing-library/react'
+import { act, renderHook } from '@testing-library/react'
 
 vi.mock('../features/usePageStore')
 vi.mock('../features/useUsersDataStore')
@@ -17,9 +17,8 @@ const mockUseUsersHook = useUsersHook as unknown as Mock
 
 describe('test useSearchHookStore group', () => {
     const setCurrentPageMock = vi.fn()
-    const setSearchQueryMock = vi.fn()
     const setUsersDataMock = vi.fn()
-    beforeAll(() => {
+    beforeEach(() => {
         // useUsersDataStore のモックを設定
         mockUseUsersDataStore.mockImplementationOnce(() => [
             {
@@ -28,8 +27,8 @@ describe('test useSearchHookStore group', () => {
                 created_at: '2019-02-02T00:00:00.000Z',
                 updated_at: '2019-02-02T00:00:00.000Z',
             }
-        ]).mockImplementationOnce(() => vi.fn()) // 次回の呼び出し時には関数としてモックする
-        
+        ]).mockImplementationOnce(() => setUsersDataMock)
+
         // mockUsePageStore のモック
         mockUsePageStore.mockImplementationOnce(() => 0).mockImplementationOnce(() => setCurrentPageMock)
 
@@ -41,10 +40,12 @@ describe('test useSearchHookStore group', () => {
         }))
     })
 
-    beforeEach(() => {
+    afterEach(() => {
         mockUsePageStore.mockClear()
         mockUseUsersDataStore.mockClear()
         mockUseUsersHook.mockClear()
+        setCurrentPageMock.mockClear()
+        setUsersDataMock.mockClear()
     })
 
     test('should call setCurrentPage when page is changed', () => {
@@ -54,25 +55,33 @@ describe('test useSearchHookStore group', () => {
         expect(setCurrentPageMock).toHaveBeenCalledWith(1)
     })
 
-    test('should call setSearchQuery when button clicked', () => {
+    test('should call setUsersData when button clicked', () => {
         const { result } = renderHook(() => useSearchHook())
-
-        // setUsersDataが呼び出されたことを確認
-        expect(setUsersDataMock).toHaveBeenCalled()
-
-        // setUsersDataに渡されたデータの内容を確認
-        expect(mockUseUsersDataStore()).toEqual([
-            {
-                id: '1',
-                name: 'John Doe',
-                created_at: '2019-02-02T00:00:00.000Z',
-                updated_at: '2019-02-02T00:00:00.000Z',
-            }
-        ])
-
         result.current.handleOnSubmit({ currentTarget: { innerText: '検索' }, preventDefault: vi.fn() } as unknown as MouseEvent<HTMLButtonElement>)
-        expect(setUsersDataMock).toHaveBeenCalledWith(mockUseUsersDataStore())
-        expect(setSearchQueryMock).toHaveBeenCalledWith(1)
+        expect(setCurrentPageMock).toHaveBeenCalledWith(1)
+        expect(setUsersDataMock).toHaveBeenCalledTimes(2)
+        expect(setUsersDataMock).toHaveBeenCalledWith([])
     })
 
+    test('should call setSearchQuery when inputText changed', async () => {
+        vi.mock(import("react"), async (importOriginal) => {
+            const actual = await importOriginal()
+            return {
+              ...actual,
+              useState: vi.fn().mockReturnValue(['', vi.fn()]),
+            }
+        })
+        const mockFn = vi.fn()
+        vi.mocked(useState).mockReturnValue(['', mockFn])
+
+        const { result } = renderHook(() => useSearchHook())
+
+        // handleOnChangeを呼び出し
+        const event = { currentTarget: { value: '新しいテスト' } } as unknown as ChangeEvent<HTMLInputElement>
+        result.current.handleOnChange(event)
+
+        // 期待値の確認
+        expect(mockFn).toBeCalledTimes(1)
+        expect(result.current.handleOnChange(event)).toBe('新しいテスト')
+    })
 })
