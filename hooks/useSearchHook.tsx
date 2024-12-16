@@ -74,7 +74,6 @@ export const useSearchHook = () => {
         event.preventDefault()
         setCurrentPage(1)
         const tempData = quickSort(data, event.currentTarget.value as SortType)
-        console.log(tempData)
         if(searchQuery === null || searchQuery === undefined || searchQuery === "") {
             setUsersData(tempData)
             return tempData
@@ -92,13 +91,13 @@ export const useSearchHook = () => {
             const pivot = arr[arr.length - 1]
             const left = arr.filter(e => new Date(e.created_at.replace(" ", "")) < new Date(pivot.created_at.replace(" ", "")))
             const right = arr.filter(e => new Date(pivot.created_at.replace(" ", "")) < new Date(e.created_at.replace(" ", "")))
-            return [...quickSort(left, 'new'), pivot, ...quickSort(right, 'new')]
+            return [...quickSort(left, 'old'), pivot, ...quickSort(right, 'old')]
         }
         if(type === 'new') {
             const pivot = arr[arr.length - 1]
             const left = arr.filter(e => new Date(pivot.created_at.replace(" ", "")) < new Date(e.created_at.replace(" ", "")))
             const right = arr.filter(e => new Date(e.created_at.replace(" ", "")) < new Date(pivot.created_at.replace(" ", "")))
-            return [...quickSort(left, 'old'), pivot, ...quickSort(right, 'old')]
+            return [...quickSort(left, 'new'), pivot, ...quickSort(right, 'new')]
         }
         if(type === 'name') {
             return [...arr.sort((a, b) => a.name.localeCompare(b.name, "ja"))]

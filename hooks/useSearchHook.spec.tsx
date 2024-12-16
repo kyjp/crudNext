@@ -5,7 +5,7 @@ import { useUsersDataStore } from '@/features/useUsersDataStore'
 import { useUsersHook } from './useUsersHook'
 import { ChangeEvent, MouseEvent, useState } from 'react'
 import { usePageStore } from '@/features/usePageStore'
-import { act, renderHook } from '@testing-library/react'
+import { renderHook } from '@testing-library/react'
 
 vi.mock('../features/usePageStore')
 vi.mock('../features/useUsersDataStore')
@@ -83,5 +83,107 @@ describe('test useSearchHookStore group', () => {
         // 期待値の確認
         expect(mockFn).toBeCalledTimes(1)
         expect(result.current.handleOnChange(event)).toBe('新しいテスト')
+    })
+
+    test('should call handleSelect when select changed', async () => {
+        const { result } = renderHook(() => useSearchHook())
+        result.current.handleOnSelect({ currentTarget: { value: 'old' }, preventDefault: vi.fn() } as unknown as ChangeEvent<HTMLSelectElement>)
+        expect(setCurrentPageMock).toHaveBeenCalledWith(1)
+        expect(setUsersDataMock).toHaveBeenCalledTimes(2)
+        expect(setUsersDataMock).toHaveBeenCalledWith([])
+    })
+
+    test('verifying the operation of quicksort', async () => {
+        const { result } = renderHook(() => useSearchHook())
+        const arr = [
+            {
+                id: '1',
+                name: 'John Doe',
+                created_at: '2019-02-02T00:00:00.000Z',
+                updated_at: '2019-02-02T00:00:00.000Z',
+            },
+            {
+                id: "2",
+                name: "Hays Workman",
+                created_at: "2014-08-08T03:14:44 -09:00",
+                updated_at: "2016-02-24T04:06:54 -09:00"
+            },
+            {
+                id: "3",
+                name: "Kerry Shannon",
+                created_at: "2014-02-07T08:20:49 -09:00",
+                updated_at: "2020-06-11T01:45:58 -09:00"
+            },
+        ]
+        const quickSort = result.current.quickSort
+        const oldSortArr = await quickSort(arr, 'old')
+        const newSortArr = await quickSort(arr, 'new')
+        const nameSortArr = await quickSort(arr, 'name')
+        expect(oldSortArr).toEqual(
+            [
+                {
+                    id: "3",
+                    name: "Kerry Shannon",
+                    created_at: "2014-02-07T08:20:49 -09:00",
+                    updated_at: "2020-06-11T01:45:58 -09:00"
+                },
+                {
+                    id: "2",
+                    name: "Hays Workman",
+                    created_at: "2014-08-08T03:14:44 -09:00",
+                    updated_at: "2016-02-24T04:06:54 -09:00"
+                },
+                {
+                    id: '1',
+                    name: 'John Doe',
+                    created_at: '2019-02-02T00:00:00.000Z',
+                    updated_at: '2019-02-02T00:00:00.000Z',
+                },
+            ],
+        )
+        expect(newSortArr).toEqual(
+            [
+                {
+                    id: '1',
+                    name: 'John Doe',
+                    created_at: '2019-02-02T00:00:00.000Z',
+                    updated_at: '2019-02-02T00:00:00.000Z',
+                },
+                {
+                    id: "2",
+                    name: "Hays Workman",
+                    created_at: "2014-08-08T03:14:44 -09:00",
+                    updated_at: "2016-02-24T04:06:54 -09:00"
+                },
+                {
+                    id: "3",
+                    name: "Kerry Shannon",
+                    created_at: "2014-02-07T08:20:49 -09:00",
+                    updated_at: "2020-06-11T01:45:58 -09:00"
+                },
+            ],
+        )
+        expect(nameSortArr).toEqual(
+            [
+                {
+                    id: "2",
+                    name: "Hays Workman",
+                    created_at: "2014-08-08T03:14:44 -09:00",
+                    updated_at: "2016-02-24T04:06:54 -09:00"
+                },
+                {
+                    id: '1',
+                    name: 'John Doe',
+                    created_at: '2019-02-02T00:00:00.000Z',
+                    updated_at: '2019-02-02T00:00:00.000Z',
+                },
+                {
+                    id: "3",
+                    name: "Kerry Shannon",
+                    created_at: "2014-02-07T08:20:49 -09:00",
+                    updated_at: "2020-06-11T01:45:58 -09:00"
+                },
+            ],
+        )
     })
 })

@@ -7,6 +7,7 @@ export const useUserHook = () => {
     
     const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
         setName(event.currentTarget.value)
+        return event.currentTarget.value
     }
 
     const handleOnSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
