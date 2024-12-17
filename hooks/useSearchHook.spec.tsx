@@ -15,7 +15,7 @@ const mockUsePageStore = usePageStore as unknown as Mock
 const mockUseUsersDataStore = useUsersDataStore as unknown as Mock
 const mockUseUsersHook = useUsersHook as unknown as Mock
 
-describe('test useSearchHookStore group', () => {
+describe('test useSearchHook group', () => {
     const setCurrentPageMock = vi.fn()
     const setUsersDataMock = vi.fn()
     beforeEach(() => {

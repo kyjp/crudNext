@@ -1,14 +1,14 @@
 import { Mock, vi } from 'vitest'
 import { useUserHook } from './useUserHook'
 import { ChangeEvent, MouseEvent, useState } from 'react'
-import { act, renderHook } from '@testing-library/react'
+import { renderHook } from '@testing-library/react'
 import { useUsersHook } from './useUsersHook'
 
 vi.mock('./useUsersHook')
 
 const mockUseUsersHook = useUsersHook as unknown as Mock
 
-describe('test useUserHookStore group', () => {
+describe('test useUserHook group', () => {
     const addUserMutationMock = vi.fn()
     beforeEach(() => {
         mockUseUsersHook.mockImplementation(() => ({
