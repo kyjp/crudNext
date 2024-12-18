@@ -1,5 +1,5 @@
 `npx json-server --watch db.json -p 9000`
-上記コマンドでJSON Serverの起動
+上記コマンドでJSON Serverの起動してbun run devでローカルを起動します
 
 # ui-elements
 ui-elements は、Atomic デザインでいうところの atoms に相当するもの
