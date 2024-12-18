@@ -11,7 +11,7 @@ const AddUserForm: FC = () => {
             <div className="mt-8">
                 <InputText
                     placeholder="ユーザー名"
-                    defaultValue={name}
+                    value={name}
                     onChange={handleOnChange}
                 />
             </div>
