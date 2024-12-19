@@ -11,7 +11,7 @@ const mockUseUserHook = useUserHook as unknown as Mock
 describe('Test group of AddUserForm Component', () => {
     const handleOnChange = vi.fn()
     const handleOnSubmit = vi.fn()
-    const mockName="John Doe"
+    const mockName = "John Doe"
 
     beforeEach(() => {
         mockUseUserHook.mockImplementation(() => ({

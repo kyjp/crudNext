@@ -19,11 +19,13 @@ const Modal: FC<ModalType> = ({
             </Button>
             <div
                 tabIndex={-1}
+                role="dialog"
                 className={`${!modalFlg ? 'hidden ' : '' } overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full max-h-full flex`}
             >
                 <div
                     className="fixed top-0 left-0 w-screen h-screen bg-black/70 hover:cursor-pointer"
                     onClick={handleOnClick}
+                    data-testid="modal-overlay"
                 />
                 <div className="relative p-4 w-full max-w-md max-h-full">
                     <div className="relative bg-white rounded-lg shadow">
