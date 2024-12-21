@@ -12,7 +12,7 @@ const SearchForm: FC<SearchFormType> & {
 } = () => {
     const {searchQuery, handleOnChange, handleOnSubmit, handleOnSelect} = useSearchHook()
     return (
-        <form>
+        <form data-testid="search-form">
             <div className="flex gap-3">
                 <div>
                     <InputText
