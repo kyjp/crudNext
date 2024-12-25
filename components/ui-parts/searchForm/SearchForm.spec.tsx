@@ -7,7 +7,7 @@ import '@testing-library/jest-dom'
 vi.mock('../../../hooks/useSearchHook')
 const mockUseSearchHook = useSearchHook as unknown as Mock
 
-describe('serchForm Component', () => {
+describe('Test group of serchForm Component', () => {
     const mockHandleOnChange = vi.fn()
     const mockHandleOnSubmit = vi.fn()
     const mockHandleOnSelect = vi.fn()
