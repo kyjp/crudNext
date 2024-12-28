@@ -3,8 +3,9 @@ import { useUsersHook } from "@/hooks/useUsersHook"
 import { Mock } from "vitest"
 import UsersList from "./UsersList"
 import { fireEvent, render, screen } from "@testing-library/react"
+import '@testing-library/jest-dom'
 
-vi.mock('../../../hooks/userSearchHook')
+vi.mock('../../../hooks/useSearchHook')
 vi.mock('../../../hooks/useUsersHook')
 
 const mockUseUsersHook = useUsersHook as unknown as Mock
@@ -14,7 +15,7 @@ describe('Test group of UsersList Component', () => {
     const mockHandleClick = vi.fn()
 
     beforeEach(() => {
-        mockUseSearchHook.mockImplementation(() => ({
+        mockUseUsersHook.mockImplementation(() => ({
             isLoading: false,
             error: null
         }))
@@ -31,16 +32,16 @@ describe('Test group of UsersList Component', () => {
     })
 
     test('renders loading state', () => {
-        mockUseSearchHook.mockImplementation(() => ({
+        mockUseUsersHook.mockImplementation(() => ({
             isLoading: true,
             error: null
         }))
         render(<UsersList />)
-        expect(screen.getByText('Loading')).toBeInTheDocument()
+        expect(screen.getByText('Loading...')).toBeInTheDocument()
     })
 
     test('renders error state', () => {
-        mockUseSearchHook.mockImplementation(() => ({
+        mockUseUsersHook.mockImplementation(() => ({
             isLoading: false,
             error: {message: 'Something went wrong'}
         }))

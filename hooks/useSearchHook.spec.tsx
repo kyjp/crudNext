@@ -48,51 +48,60 @@ describe('test useSearchHook group', () => {
         setUsersDataMock.mockClear()
     })
 
-    test('should call setCurrentPage when page is changed', () => {
-        const { result } = renderHook(() => useSearchHook())
-        // クリックイベントを模倣
-        result.current.handleOnClick({ currentTarget: { innerText: 'Next' }, preventDefault: vi.fn() } as unknown as MouseEvent<HTMLButtonElement>)
-        expect(setCurrentPageMock).toHaveBeenCalledWith(1)
-    })
-
-    test('should call setUsersData when button clicked', () => {
-        const { result } = renderHook(() => useSearchHook())
-        result.current.handleOnSubmit({ currentTarget: { innerText: '検索' }, preventDefault: vi.fn() } as unknown as MouseEvent<HTMLButtonElement>)
-        expect(setCurrentPageMock).toHaveBeenCalledWith(1)
-        expect(setUsersDataMock).toHaveBeenCalledTimes(2)
-        expect(setUsersDataMock).toHaveBeenCalledWith([])
-    })
-
-    test('should call setSearchQuery when inputText changed', async () => {
-        vi.mock(import("react"), async (importOriginal) => {
-            const actual = await importOriginal()
-            return {
-              ...actual,
-              useState: vi.fn().mockReturnValue(['', vi.fn()]),
-            }
+    describe('test handleOnClick group', () => {
+        test('should call setCurrentPage when pager next button is clicked', () => {
+            const { result } = renderHook(() => useSearchHook())
+            // クリックイベントを模倣
+            result.current.handleOnClick({ currentTarget: { innerText: 'Next' }, preventDefault: vi.fn() } as unknown as MouseEvent<HTMLButtonElement>)
+            expect(setCurrentPageMock).toHaveBeenCalledWith(1)
         })
-        const mockFn = vi.fn()
-        vi.mocked(useState).mockReturnValue(['', mockFn])
-
-        const { result } = renderHook(() => useSearchHook())
-
-        // handleOnChangeを呼び出し
-        const event = { currentTarget: { value: '新しいテスト' } } as unknown as ChangeEvent<HTMLInputElement>
-        result.current.handleOnChange(event)
-
-        // 期待値の確認
-        expect(mockFn).toBeCalledTimes(1)
-        expect(result.current.handleOnChange(event)).toBe('新しいテスト')
     })
 
-    test('should call handleSelect when select changed', async () => {
-        const { result } = renderHook(() => useSearchHook())
-        result.current.handleOnSelect({ currentTarget: { value: 'old' }, preventDefault: vi.fn() } as unknown as ChangeEvent<HTMLSelectElement>)
-        expect(setCurrentPageMock).toHaveBeenCalledWith(1)
-        expect(setUsersDataMock).toHaveBeenCalledTimes(2)
-        expect(setUsersDataMock).toHaveBeenCalledWith([])
+    describe('test handleOnChange group', () => {
+        test('should call setSearchQuery when inputText changed', async () => {
+            vi.mock(import("react"), async (importOriginal) => {
+                const actual = await importOriginal()
+                return {
+                  ...actual,
+                  useState: vi.fn().mockReturnValue(['', vi.fn()]),
+                }
+            })
+            const mockFn = vi.fn()
+            vi.mocked(useState).mockReturnValue(['', mockFn])
+    
+            const { result } = renderHook(() => useSearchHook())
+    
+            // handleOnChangeを呼び出し
+            const event = { currentTarget: { value: '新しいテスト' } } as unknown as ChangeEvent<HTMLInputElement>
+            result.current.handleOnChange(event)
+    
+            // 期待値の確認
+            expect(mockFn).toBeCalledTimes(1)
+            expect(result.current.handleOnChange(event)).toBe('新しいテスト')
+        })
     })
 
+    describe('test handleOnSubmit group', () => {
+        test('should call setUsersData when button clicked', () => {
+            const { result } = renderHook(() => useSearchHook())
+            result.current.handleOnSubmit({ currentTarget: { innerText: '検索' }, preventDefault: vi.fn() } as unknown as MouseEvent<HTMLButtonElement>)
+            expect(setCurrentPageMock).toHaveBeenCalledWith(1)
+            expect(setUsersDataMock).toHaveBeenCalledTimes(2)
+            expect(setUsersDataMock).toHaveBeenCalledWith([])
+        })
+
+    })
+
+    describe('test handleOnSelect group', () => {
+        test('should call handleSelect when select changed', async () => {
+            const { result } = renderHook(() => useSearchHook())
+            result.current.handleOnSelect({ currentTarget: { value: 'old' }, preventDefault: vi.fn() } as unknown as ChangeEvent<HTMLSelectElement>)
+            expect(setCurrentPageMock).toHaveBeenCalledWith(1)
+            expect(setUsersDataMock).toHaveBeenCalledTimes(2)
+            expect(setUsersDataMock).toHaveBeenCalledWith([])
+        })
+    })
+    
     test('verifying the operation of quicksort', async () => {
         const { result } = renderHook(() => useSearchHook())
         const arr = [
